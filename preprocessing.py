@@ -6,18 +6,6 @@ import pickle
 
 def preprocess(data_dir: str):
 	
-	import requests
-	requests.packages.urllib3.disable_warnings()
-	import ssl
-
-	try:
-	    _create_unverified_https_context = ssl._create_unverified_context
-	except AttributeError:
-	    # Legacy Python that doesn't verify HTTPS certificates by default
-	    pass
-	else:
-	    # Handle target environment that doesn't support HTTPS verification
-	    ssl._create_default_https_context = _create_unverified_https_context
 
     fashion_mnist = keras.datasets.fashion_mnist
     (train_images, train_labels), (test_images, test_labels) = fashion_mnist.load_data()
@@ -41,6 +29,20 @@ def preprocess(data_dir: str):
 
 
 if __name__ == '__main__':
+
+    import requests
+    requests.packages.urllib3.disable_warnings()
+    import ssl
+
+    try:
+        _create_unverified_https_context = ssl._create_unverified_context
+    except AttributeError:
+    # Legacy Python that doesn't verify HTTPS certificates by default
+        pass
+    else:
+    # Handle target environment that doesn't support HTTPS verification
+        ssl._create_default_https_context = _create_unverified_https_context
+
     parser = argparse.ArgumentParser(description='Kubeflow MNIST training script')
     parser.add_argument('--data_dir', help='path to images and labels.')
     args = parser.parse_args()
